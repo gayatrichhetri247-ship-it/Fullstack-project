@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import { loginUser } from "../../api/auth.service";
 import { useDispatch, useSelector } from "react-redux";
-import { loginSuccess } from "../../redux/features/authSlice";
+import { AuthSuccess } from "../../redux/features/authSlice";
 
 const LoginUser = () => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const LoginUser = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
    const res =  await loginUser(formData)
-   dispatch(loginSuccess(res.user));
+   dispatch(AuthSuccess(res.user));
     console.log(res); 
     navigate("/")
 

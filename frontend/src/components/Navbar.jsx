@@ -1,50 +1,63 @@
-import { NavLink } from "react-router"
-import { logoutUser } from "../api/auth.service";
+import React, { useEffect } from "react";
+import { NavLink } from "react-router";
+import { getUser, logoutUser } from "../api/auth.service";
+import { useDispatch, useSelector } from "react-redux";
+import { AuthSuccess, LogoutSuccess } from "../redux/features/authSlice";
 
 const Navbar = () => {
-  // Tailwind classes for normal vs active links
+  const dispatch = useDispatch();
+
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  // Active link styling helper
   const linkStyles = ({ isActive }) =>
     `px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
       isActive
-        ? "bg-indigo-600 text-white"
+        ? "bg-blue-600 text-white"
         : "text-gray-300 hover:bg-gray-700 hover:text-white"
-    }`
+    }`;
 
-    const handleLogout = async()=>{
-      await logoutUser();
-    
-    };
+  const handleLogout = async () => {
+    await logoutUser();
+    dispatch(LogoutSuccess());
+  };
+
+  useEffect(async()=>{
+    const res = await getUser();
+    dispatch(AuthSuccess(res.user));
+    console.log(res)
+  }, []);
+
   return (
-    <nav className="bg-gray-950 px-6 py-4 shadow-md">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Logo / Brand Name */}
-        <div className="text-white font-bold text-xl tracking-wider">
-          MyApp
-        </div>
+    <nav className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between shadow-md">
+      {/* Logo / Brand Name */}
+      <div className="text-white font-bold text-xl tracking-wider">MyApp</div>
 
-        {/* Navigation Links & Actions */}
-        <div className="flex items-center space-x-4">
-          <NavLink to="/" className={linkStyles}>
-            Home
-          </NavLink>
-          <NavLink to="/login" className={linkStyles}>
-            Login
-          </NavLink>
-          <NavLink to="/sign-up" className={linkStyles}>
-            Signup
-          </NavLink>
-          
-          {/* Divider */}
-          <span className="h-5 w-px bg-gray-700" aria-hidden="true" />
+      {/* Navigation Links & Actions */}
+      <div className="flex items-center gap-4">
+        <NavLink to="/" className={linkStyles}>
+          Home
+        </NavLink>
 
-          {/* Logout Button */}
-          <button onClick={handleLogout} className="bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer">
+        {user && isAuthenticated ? (
+          <button
+            onClick={handleLogout}
+            className="ml-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+          >
             Logout
           </button>
-        </div>
+        ) : (
+          <>
+            <NavLink to="/login" className={linkStyles}>
+              Login
+            </NavLink>
+            <NavLink to="/sign-up" className={linkStyles}>
+              Signup
+            </NavLink>{" "}
+          </>
+        )}
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

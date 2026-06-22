@@ -1,9 +1,15 @@
 import {useState} from "react";
 import { signUpUser } from "../../api/auth.service";
 import {useNavigate, Link} from "react-router"
+import { AuthSuccess } from "../../redux/features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const SignUp = () => {
   const navigate = useNavigate();
+
+  const user = useSelector((state)=>state.auth)
+  console.log(user)
+   const dispatch =useDispatch();
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
@@ -20,6 +26,7 @@ const SignUp = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
    const res =  await signUpUser(formData)
+   dispatch(AuthSuccess(res.user));
     console.log(res); 
     navigate("/")
 
