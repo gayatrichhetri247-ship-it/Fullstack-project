@@ -4,6 +4,7 @@ import SignUp from './pages/auth/SignUp'
 import NotFound from './pages/public/NotFound'
 import LoginUser from './pages/auth/LoginUser'
 import Navbar from './components/Navbar'
+import Menu from './pages/public/Menu'
 
 const AppRoutes = () => {
   return (
@@ -13,6 +14,8 @@ const AppRoutes = () => {
             <Route path='/' element={<Home/>}></Route>
             <Route path='/login' element={<LoginUser />}></Route>
             <Route path='/sign-up' element={<SignUp/>}></Route>
+            <Route path='/menu' element={<Menu/>}></Route>
+            
             <Route path='*' element={<NotFound/>}></Route>
         </Routes>
     </div>

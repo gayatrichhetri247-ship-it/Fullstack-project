@@ -37,6 +37,9 @@ const Navbar = () => {
         <NavLink to="/" className={linkStyles}>
           Home
         </NavLink>
+        <NavLink to="/menu" className={linkStyles}>
+          Menu
+        </NavLink>
 
         {user && isAuthenticated ? (
           <button
