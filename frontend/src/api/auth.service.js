@@ -48,7 +48,7 @@ export const getUser = async () => {
   }
 };
 export const getUsers = async () => {
-  const res = await api.get("http://localhost:9000/api/users");
+  const res = await api.get("/users");
 
   return res.data;
 };

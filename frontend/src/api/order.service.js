@@ -22,6 +22,6 @@ export const getOrder = async (id) => {
   }
 };
 export const getOrders = async () => {
-  const response = await api.get("http://localhost:9000/api/orders");
+  const response = await api.get("/orders");
   return response.data;
 };
