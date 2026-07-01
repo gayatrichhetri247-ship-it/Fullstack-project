@@ -6,6 +6,7 @@ dotenv.config();
 
 ConnectDB()
   .then(() => {
+    console.log("CORS_ORIGIN =", process.env.CORS_ORIGIN);
     app.listen(process.env.PORT || 9000, () => {
       console.log("Server is running");
     });
