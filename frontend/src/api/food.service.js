@@ -31,7 +31,7 @@ export const deleteFood = async (id) => {
 };
 export const editFood = async (id, data) => {
   try {
-    const res = await api.patch(`/foods/${id}`, data);
+    const res = await api.patch(`/foods/${id}`,);
     return res.data;
   } catch (error) {
     console.error("Failed to fetch foods:", error.response?.data || error.message);

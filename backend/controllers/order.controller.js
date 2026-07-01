@@ -39,7 +39,7 @@ export const success = async (req, res) => {
       },
       {
         returnDocument: "after",
-      }
+      },
     );
 
     console.log("Updated Order:", updatedOrder);
@@ -50,9 +50,7 @@ export const success = async (req, res) => {
       });
     }
 
-    return res.redirect(
-      `http://localhost:5173/success?id=${transaction_uuid}`
-    );
+    return res.redirect(`http://localhost:5173/success?id=${transaction_uuid}`);
   } catch (error) {
     console.error(error);
 
@@ -61,16 +59,18 @@ export const success = async (req, res) => {
     });
   }
 };
-export const getOrderById = async(req,res) =>{
+export const getOrderById = async (req, res) => {
   const id = req.params.id;
-  const order = await orderModel.findById(id).populate("userId", "email fullname").populate("foods.foodId")
+  const order = await orderModel
+    .findById(id)
+    .populate("userId", "email fullname")
+    .populate("foods.foodId");
   res.status(200).json({
-    message:"Order fetched",
-    success:true,
-    order
-
-  })
-}
+    message: "Order fetched",
+    success: true,
+    order,
+  });
+};
 export const getOrders = async (req, res) => {
   try {
     const orders = await orderModel
