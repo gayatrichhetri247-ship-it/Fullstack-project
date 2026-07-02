@@ -2,14 +2,21 @@ import jwt from "jsonwebtoken"
 import userModel from "../models/user.model.js";
 
 export const varifyToken= async(req,res,next)=>{
+   export const varifyToken = async (req, res, next) => {
+    console.log("Cookies:", req.cookies);
+    console.log("Cookie Header:", req.headers.cookie);
+
     const token = req.cookies?.token;
 
-    if(!token){
+    if (!token) {
         return res.status(400).json({
-            message:"token not provided",
-            success:false,
+            message: "token not provided",
+            success: false,
         });
     }
+
+    // ...
+}
 
     try{
          const encoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
