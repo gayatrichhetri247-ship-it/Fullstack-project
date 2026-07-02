@@ -16,9 +16,10 @@ import FoodManagement from "./admin/FoodManagement";
 import AddFood from "./admin/AddFood";
 import EditFood from "./admin/EditFood";
 import { useSelector } from "react-redux";
+import ProtectedAdmin from "./admin/ProtectedAdmin";
 
 const AppRoutes = () => {
- const {user, isAuthenticated} = useSelector((state)=>state.auth);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
 
   return (
     <div>
@@ -32,15 +33,15 @@ const AppRoutes = () => {
         <Route path="/payment" element={<Payment />}></Route>
         <Route path="/success" element={<Success />}></Route>
         <Route path="/cart" element={<Cart />}></Route>
-        
-        {isAuthenticated && user?.role === "admin" &&(<Route path="/admin" element={<Dashboard />}>
-          <Route path="food-management" element={<FoodManagement />}></Route>
-          <Route path="user-management" element={<UserManagement />}></Route>
-          <Route path="order-management" element={<OrderManagement />}></Route>
-          <Route path="add-food" element={<AddFood />}></Route>
-          <Route path="edit-food" element={<EditFood />}></Route>
-        </Route>)}
-        
+
+        <Route path="/admin" element={<ProtectedAdmin />}>
+          <Route index element={<Dashboard />} />
+          <Route path="food-management" element={<FoodManagement />} />
+          <Route path="user-management" element={<UserManagement />} />
+          <Route path="order-management" element={<OrderManagement />} />
+          <Route path="add-food" element={<AddFood />} />
+          <Route path="edit-food" element={<EditFood />} />
+        </Route>
 
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
