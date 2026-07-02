@@ -13,10 +13,11 @@ const FoodManagement = () => {
   console.log(cart);
 
   const { data, isPending, isError, error } = useQuery({
+    
     queryKey: ["foods"],
     queryFn: getfoods,
   });
-
+const foods = data?.foods || [];
   const navigate = useNavigate();
 
   
@@ -40,15 +41,6 @@ const FoodManagement = () => {
         <span className="ml-3 text-lg font-medium text-gray-600">
           Loading food database...
         </span>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="mx-auto my-8 max-w-md rounded-lg border border-red-200 bg-red-50 p-4 text-center text-red-700">
-        <p className="font-semibold">Something went wrong!</p>
-        <p className="text-sm">{error?.message || "Could not fetch menu."}</p>
       </div>
     );
   }
@@ -77,6 +69,11 @@ const FoodManagement = () => {
           </button>
         </div>
       </div>
+      {isError && (
+  <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+    {error?.response?.data?.message || "Failed to fetch foods."}
+  </div>
+)}
 
       {/* Tabular Layout */}
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -101,61 +98,81 @@ const FoodManagement = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {data?.foods?.map((food) => (
-                <tr
-                  key={food._id || food.name}
-                  className="hover:bg-gray-50/70 transition-colors"
-                >
-                  {/* Thumbnail Image column */}
-                  <td className="whitespace-nowrap px-6 py-4">
-                    <img
-                      onClick={() =>
-                        navigate(`/menu/${food._id}`, { state: food })
-                      }
-                      src={food.photo}
-                      alt={food.name}
-                      className="h-12 w-16 rounded-md object-cover border border-gray-100 cursor-pointer hover:opacity-80 transition-opacity"
-                    />
-                  </td>
+           <tbody className="divide-y divide-gray-200 bg-white">
+  {foods.length > 0 ? (
+    foods.map((food) => (
+      <tr
+        key={food._id}
+        className="hover:bg-gray-50 transition-colors"
+      >
+        <td className="px-6 py-4">
+          <img
+            src={food.photo}
+            alt={food.name}
+            onClick={() => navigate(`/menu/${food._id}`, { state: food })}
+            className="h-12 w-16 rounded-md object-cover border cursor-pointer"
+          />
+        </td>
 
-                  {/* Name Column */}
-                  <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
-                    {food.name}
-                  </td>
+        <td className="px-6 py-4 font-medium">
+          {food.name}
+        </td>
 
-                  {/* Description Column */}
-                  <td className="px-6 py-4 text-gray-600 max-w-md">
-                    <p className="line-clamp-2 text-xs sm:text-sm">
-                      {food.description}
-                    </p>
-                  </td>
+        <td className="px-6 py-4">
+          <p className="line-clamp-2">
+            {food.description}
+          </p>
+        </td>
 
-                  {/* Price Column */}
-                  <td className="whitespace-nowrap px-6 py-4 font-semibold text-orange-600">
-                    RS {food.price}
-                  </td>
+        <td className="px-6 py-4 font-semibold text-orange-600">
+          Rs {food.price}
+        </td>
 
-                  {/* Admin Actions Column */}
-                  <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium space-x-3">
-                    <button
-                      className="text-indigo-600 hover:text-indigo-900 transition-colors"
-                      onClick={() => navigate("/admin/edit-food", {state:food})}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-900 transition-colors"
-                      onClick={() => {
-                        deleteMutation.mutate(food._id);
-                      }}
-                    >
-                      Remove
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+        <td className="px-6 py-4 text-right space-x-3">
+          <button
+            onClick={() =>
+              navigate("/admin/edit-food", { state: food })
+            }
+            className="text-indigo-600 hover:text-indigo-800"
+          >
+            Edit
+          </button>
+
+          <button
+            onClick={() => deleteMutation.mutate(food._id)}
+            className="text-red-600 hover:text-red-800"
+          >
+            Remove
+          </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td
+        colSpan={5}
+        className="py-16 text-center"
+      >
+        <div className="flex flex-col items-center">
+          <h3 className="text-lg font-semibold text-gray-700">
+            No food items available
+          </h3>
+
+          <p className="mt-2 text-gray-500">
+            Click <strong>Add New Item</strong> to add your first food.
+          </p>
+
+          <button
+            onClick={() => navigate("/admin/add-food")}
+            className="mt-5 rounded-lg bg-orange-600 px-5 py-2 text-white hover:bg-orange-700"
+          >
+            Add New Item
+          </button>
+        </div>
+      </td>
+    </tr>
+  )}
+</tbody>
           </table>
         </div>
       </div>
