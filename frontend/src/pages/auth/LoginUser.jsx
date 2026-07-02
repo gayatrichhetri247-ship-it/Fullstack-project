@@ -22,14 +22,23 @@ const LoginUser = () => {
     });
   };
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-   const res =  await loginUser(formData)
-   dispatch(AuthSuccess(res.user));
-    console.log(res); 
-    navigate("/")
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  };
+  try {
+    const res = await loginUser(formData);
+
+    dispatch(AuthSuccess(res.user));
+
+    if (res.user.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
